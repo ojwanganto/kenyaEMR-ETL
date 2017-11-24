@@ -1908,11 +1908,10 @@ max(if(o.concept_id = 164075, (case o.value_coded when 159407 then "Poor" when 1
 max(if(o.concept_id = 160433, (case o.value_coded when 1267 then "Completed" when 5240 then "Lost to followup" when 159836 then "Discontinued" when 160034 then "Died" when 159492 then "Transferred Out" else "" end), "" )) as outcome,
 max(if(o.concept_id = 1266, (case o.value_coded when 102 then "Drug Toxicity" when 112141 then "TB" when 5622 then "Other" else "" end), "" )) as discontinuation_reason,
 max(if(o.concept_id = 160632, o.value_text, "" )) as action_taken
-from obs o 
-inner join encounter e on e.encounter_id = o.encounter_id and e.voided =0 
+from encounter e 
 inner join form f on f.form_id=e.form_id and f.uuid in ("22c68f86-bbf0-49ba-b2d1-23fa7ccf0259")
-where o.concept_id in (164073, 164074, 159098, 118983, 512, 164075, 160433, 1266, 160632)
-and e.date_created >= last_update_time
+inner join obs o on o.encounter_id = e.encounter_id and o.concept_id in (164073, 164074, 159098, 118983, 512, 164075, 160433, 1266, 160632)
+where e.date_created >= last_update_time
 or e.date_changed >= last_update_time
 or e.date_voided >= last_update_time
 group by e.encounter_id
